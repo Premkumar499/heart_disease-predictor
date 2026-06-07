@@ -4,7 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Heart Disease Predictor</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6fb;
+      color: #1a1a2e;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem;
+    }
+
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 2rem; color: #c0392b; margin-bottom: 0.4rem; }
+    header p { color: #666; font-size: 0.95rem; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    .field { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
+
+    label { font-size: 0.85rem; font-weight: 600; color: #444; }
+
+    input, select {
+      padding: 0.55rem 0.8rem;
+      border: 1.5px solid #dde1ea;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      background: #fafafa;
+    }
+
+    input:focus, select:focus { outline: none; border-color: #c0392b; background: #fff; }
+
+    .btn-predict {
+      display: block; width: 100%; margin-top: 1.5rem; padding: 0.85rem;
+      background: #c0392b; color: #fff; font-size: 1rem; font-weight: 700;
+      border: none; border-radius: 10px; cursor: pointer;
+      letter-spacing: 0.5px; transition: background 0.2s, transform 0.1s;
+    }
+    .btn-predict:hover { background: #a93226; }
+    .btn-predict:active { transform: scale(0.98); }
+    .btn-predict:disabled { background: #ccc; cursor: not-allowed; }
+
+    .result { margin-top: 2rem; padding: 1.5rem; border-radius: 12px; animation: fadeIn 0.4s ease; }
+    .result.hidden { display: none; }
+    .result.high-risk { background: #fdecea; border: 1.5px solid #e74c3c; }
+    .result.low-risk  { background: #eafaf1; border: 1.5px solid #27ae60; }
+    .result h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+    .result.high-risk h2 { color: #c0392b; }
+    .result.low-risk h2  { color: #1e8449; }
+
+    .prob-cards { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .prob-card {
+      flex: 1; min-width: 140px; background: #fff; border-radius: 10px;
+      padding: 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .prob-card .label { font-size: 0.78rem; color: #888; margin-bottom: 0.4rem; }
+    .prob-card .value { font-size: 1.6rem; font-weight: 700; }
+    .prob-card.no-disease .value { color: #27ae60; }
+    .prob-card.disease .value    { color: #c0392b; }
+
+    footer { margin-top: 2.5rem; text-align: center; font-size: 0.8rem; color: #aaa; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -22,7 +98,6 @@
             <label for="age">Age</label>
             <input type="number" id="age" name="age" min="1" max="120" value="50" required />
           </div>
-
           <div class="field">
             <label for="sex">Sex</label>
             <select id="sex" name="sex">
@@ -30,7 +105,6 @@
               <option value="1" selected>Male</option>
             </select>
           </div>
-
           <div class="field">
             <label for="cp">Chest Pain Type</label>
             <select id="cp" name="cp">
@@ -40,17 +114,14 @@
               <option value="3">Asymptomatic</option>
             </select>
           </div>
-
           <div class="field">
             <label for="trestbps">Resting Blood Pressure (mm Hg)</label>
             <input type="number" id="trestbps" name="trestbps" min="50" max="250" value="120" required />
           </div>
-
           <div class="field">
             <label for="chol">Serum Cholesterol (mg/dl)</label>
             <input type="number" id="chol" name="chol" min="100" max="600" value="200" required />
           </div>
-
           <div class="field">
             <label for="fbs">Fasting Blood Sugar &gt; 120 mg/dl</label>
             <select id="fbs" name="fbs">
@@ -58,7 +129,6 @@
               <option value="1">Yes</option>
             </select>
           </div>
-
           <div class="field">
             <label for="restecg">Resting ECG Results</label>
             <select id="restecg" name="restecg">
@@ -75,7 +145,6 @@
             <label for="thalach">Max Heart Rate Achieved</label>
             <input type="number" id="thalach" name="thalach" min="50" max="250" value="150" required />
           </div>
-
           <div class="field">
             <label for="exang">Exercise Induced Angina</label>
             <select id="exang" name="exang">
@@ -83,12 +152,10 @@
               <option value="1">Yes</option>
             </select>
           </div>
-
           <div class="field">
             <label for="oldpeak">ST Depression (oldpeak)</label>
             <input type="number" id="oldpeak" name="oldpeak" min="0" max="10" step="0.1" value="1.0" required />
           </div>
-
           <div class="field">
             <label for="slope">Slope of Peak Exercise ST</label>
             <select id="slope" name="slope">
@@ -97,7 +164,6 @@
               <option value="2">Upsloping</option>
             </select>
           </div>
-
           <div class="field">
             <label for="ca">Number of Major Vessels (0–4)</label>
             <select id="ca" name="ca">
@@ -108,7 +174,6 @@
               <option value="4">4</option>
             </select>
           </div>
-
           <div class="field">
             <label for="thal">Thalassemia</label>
             <select id="thal" name="thal">
@@ -130,6 +195,63 @@
     <footer>Model: Random Forest &nbsp;|&nbsp; Dataset: UCI Heart Disease (303 samples)</footer>
   </div>
 
-  <script src="/static/script.js"></script>
+  <script>
+    const form = document.getElementById("predForm");
+    const resultBox = document.getElementById("result");
+    const btn = form.querySelector(".btn-predict");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = "Predicting...";
+      resultBox.classList.add("hidden");
+
+      const fields = ["age","sex","cp","trestbps","chol","fbs","restecg",
+                      "thalach","exang","oldpeak","slope","ca","thal"];
+      const payload = {};
+      fields.forEach(f => payload[f] = document.getElementById(f).value);
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (data.error) { showError(data.error); return; }
+
+        const isHighRisk = data.prediction === 1;
+        resultBox.className = `result ${isHighRisk ? "high-risk" : "low-risk"}`;
+        resultBox.innerHTML = `
+          <h2>${isHighRisk ? "⚠️ High Risk: Heart Disease Detected" : "✅ Low Risk: No Heart Disease Detected"}</h2>
+          <div class="prob-cards">
+            <div class="prob-card no-disease">
+              <div class="label">No Disease Probability</div>
+              <div class="value">${data.prob_no_disease}%</div>
+            </div>
+            <div class="prob-card disease">
+              <div class="label">Heart Disease Probability</div>
+              <div class="value">${data.prob_disease}%</div>
+            </div>
+          </div>
+        `;
+        resultBox.classList.remove("hidden");
+        resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      } catch (err) {
+        showError("Network error. Please try again.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Predict";
+      }
+    });
+
+    function showError(msg) {
+      resultBox.className = "result high-risk";
+      resultBox.innerHTML = `<h2>❌ Error: ${msg}</h2>`;
+      resultBox.classList.remove("hidden");
+    }
+  </script>
 </body>
 </html>
