@@ -1,0 +1,162 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f4f6fb;
+  color: #1a1a2e;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2.5rem 2rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #c0392b;
+  margin-bottom: 0.4rem;
+}
+
+header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2rem;
+}
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.field {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+}
+
+input, select {
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid #dde1ea;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #c0392b;
+  background: #fff;
+}
+
+.btn-predict {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.85rem;
+  background: #c0392b;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-predict:hover { background: #a93226; }
+.btn-predict:active { transform: scale(0.98); }
+.btn-predict:disabled { background: #ccc; cursor: not-allowed; }
+
+/* Result */
+.result {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  animation: fadeIn 0.4s ease;
+}
+
+.result.hidden { display: none; }
+
+.result.high-risk {
+  background: #fdecea;
+  border: 1.5px solid #e74c3c;
+}
+
+.result.low-risk {
+  background: #eafaf1;
+  border: 1.5px solid #27ae60;
+}
+
+.result h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.result.high-risk h2 { color: #c0392b; }
+.result.low-risk h2  { color: #1e8449; }
+
+.prob-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.prob-card {
+  flex: 1;
+  min-width: 140px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.prob-card .label {
+  font-size: 0.78rem;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+
+.prob-card .value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.prob-card.no-disease .value { color: #27ae60; }
+.prob-card.disease .value    { color: #c0392b; }
+
+footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
